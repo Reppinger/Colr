@@ -9,4 +9,9 @@ class Color
   def tags
     @tags ||= []
   end
+
+  def tags=(tags)
+    @tags = tags.collect { |tag_hash| Tag.new(tag_hash) }
+  end
+
 end
