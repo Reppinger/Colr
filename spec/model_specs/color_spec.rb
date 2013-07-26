@@ -62,5 +62,4 @@ describe 'Color' do
               'I am not a hash of tag properties']
     lambda {Color.new({ tags: tags})}.should.raise(Exception)
   end
-
 end
