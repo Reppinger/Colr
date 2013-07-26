@@ -9,27 +9,35 @@ class SearchController < UIViewController
   def build_view
     @text_field = create_search_text_field
     self.view.addSubview(@text_field)
-    search_button = create_search_button @text_field.center.y
-    self.view.addSubview(search_button)
-    setup_search_event search_button
+    @search_button = create_search_button @text_field.center.y
+    self.view.addSubview(@search_button)
+    setup_search_event
   end
 
-  def setup_search_event(search_button)
-    search_button.when(UIControlEventTouchUpInside) do
-      search_button.enabled = false
-      @text_field.enabled = false
+  def setup_search_event
+    @search_button.when(UIControlEventTouchUpInside) do
+      disable_controls
       hex = @text_field.text
       Color.find(hex) do |color|
         if color.nil?
-          search_button.setTitle('None :(', forState: UIControlStateNormal)
+          @search_button.setTitle('None :(', forState: UIControlStateNormal)
         else
-          search_button.setTitle('Search', forState: UIControlStateNormal)
+          @search_button.setTitle('Search', forState: UIControlStateNormal)
           self.open_color(color)
         end
-        search_button.enabled = true
-        @text_field.enabled = true
+        enable_controls
       end
     end
+  end
+
+  def disable_controls
+    @search_button.enabled = false
+    @text_field.enabled = false
+  end
+
+  def enable_controls
+    @search_button.enabled = true
+    @text_field.enabled = true
   end
 
   def open_color(color)
