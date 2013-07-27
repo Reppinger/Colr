@@ -41,7 +41,8 @@ class SearchController < UIViewController
   end
 
   def open_color(color)
-    p "Opening #{color.inspect}"
+    controller = ColorController.alloc.initWithColor color
+    self.navigationController.pushViewController(controller, animated:true)
   end
 
   def create_search_text_field

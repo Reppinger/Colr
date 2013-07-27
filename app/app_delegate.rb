@@ -1,5 +1,6 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    return true if RUBYMOTION_ENV == 'test'
     search_controller = SearchController.alloc.initWithNibName(nil, bundle: nil)
     navigation_controller = UINavigationController.alloc.initWithRootViewController(search_controller)
     create_main_window(navigation_controller)
