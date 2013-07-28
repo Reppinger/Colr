@@ -18,7 +18,7 @@ describe 'Color' do
             .should.not.raise(Exception)
   end
 
-  it 'returns an empty array for tags if not tags are supplied' do
+  it 'returns an empty array for tags if no tags are supplied' do
     color = Color.new()
     color.tags.should == []
   end
@@ -62,4 +62,30 @@ describe 'Color' do
               'I am not a hash of tag properties']
     lambda {Color.new({ tags: tags})}.should.raise(Exception)
   end
+
+  it 'considers a color not found if its id is -1' do
+    color = Color.new({id: -1})
+    Color.no_color_found?(color).should == true
+  end
+
+  it 'considers a color found if its id is <> -1' do
+    color = Color.new({id: 0})
+    Color.no_color_found?(color).should == false
+  end
+
+  it 'call_block calls the code block with a color if found' do
+    expected_color = Color.new({id: 0})
+    Color.call_block(expected_color) do |color|
+      color.should == expected_color
+    end
+  end
+
+  it 'call_block calls the code block with nil if color not found' do
+    not_found_color = Color.new({id: -1})
+    Color.call_block(not_found_color) do |color|
+      color.should == nil
+    end
+  end
+
+
 end
