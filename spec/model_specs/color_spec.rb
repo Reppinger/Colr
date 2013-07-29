@@ -1,5 +1,4 @@
 describe 'Color initialize' do
-  extend WebStub::SpecHelpers
 
   it 'accepts properties' do
     timestamp = 1285886579
@@ -94,6 +93,8 @@ describe 'Color find' do
 end
 
 describe 'Adding tags' do
+  extend WebStub::SpecHelpers
+
   it 'calls the code block with a response if found' do
     response_200 = BubbleWrap::HTTP::Response.new({status_code: '200'})
     color = Color.new
