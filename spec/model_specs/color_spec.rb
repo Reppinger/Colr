@@ -1,6 +1,6 @@
-describe 'Color' do
+describe 'Color initialize' do
 
-  it 'accepts properties in initialize' do
+  it 'accepts properties' do
     timestamp = 1285886579
     hex = 'ff00ff'
     id = 3976
@@ -63,6 +63,10 @@ describe 'Color' do
     lambda {Color.new({ tags: tags})}.should.raise(Exception)
   end
 
+end
+
+describe 'Color find' do
+
   it 'considers a color not found if its id is -1' do
     color = Color.new({id: -1})
     Color.no_color_found?(color).should == true
@@ -73,19 +77,18 @@ describe 'Color' do
     Color.no_color_found?(color).should == false
   end
 
-  it 'call_block calls the code block with a color if found' do
+  it 'calls the code block with a color if found' do
     expected_color = Color.new({id: 0})
     Color.call_block(expected_color) do |color|
       color.should == expected_color
     end
   end
 
-  it 'call_block calls the code block with nil if color not found' do
+  it 'calls the code block with nil if color not found' do
     not_found_color = Color.new({id: -1})
     Color.call_block(not_found_color) do |color|
       color.should == nil
     end
   end
-
-
 end
+
