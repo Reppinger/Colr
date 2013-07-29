@@ -11,3 +11,7 @@ Feature: Search for color by hex code
      And I see the color search textfield
      And I see the search button
 
+  Scenario: Search returns color
+    When I fill in "#abcabc" with "ff00ff"
+    And I touch "Search"
+    Then I should see a navigation bar titled "ff00ff"
