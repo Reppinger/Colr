@@ -25,6 +25,7 @@ class ColorController < UIViewController
     @add_button = create_add_button
     self.view.addSubview @add_button
     finish_tag_text_field_layout
+    setup_add_tag_event @add_button
     @table_view = create_tag_table
     @table_view.dataSource = self
     self.view.addSubview @table_view
@@ -80,6 +81,38 @@ class ColorController < UIViewController
         [self.view.frame.size.width - tag_text_field_origin[0] - add_button_offset,
          @color_view.frame.size.height]
     ]
+  end
+
+  def setup_add_tag_event(add_button)
+    add_button.when(UIControlEventTouchUpInside) do
+      disable_controls
+      self.color.add_tag(@tag_text_field.text) do |tag|
+        if tag
+          refresh
+        else
+          enable_controls
+          @tag_text_field.text = 'Failed :('
+        end
+      end
+    end
+  end
+
+  def disable_controls
+    @add_button.enabled = false
+    @tag_text_field.enabled = false
+  end
+
+  def refresh
+    Color.find(self.color.hex) do |color|
+      self.color = color
+      @table_view.reloadData
+      enable_controls
+    end
+  end
+
+  def enable_controls
+    @add_button.enabled = true
+    @tag_text_field.enabled = true
   end
 
   def create_tag_table
