@@ -1,4 +1,5 @@
 describe 'Color initialize' do
+  extend WebStub::SpecHelpers
 
   it 'accepts properties' do
     timestamp = 1285886579
@@ -79,16 +80,71 @@ describe 'Color find' do
 
   it 'calls the code block with a color if found' do
     expected_color = Color.new({id: 0})
-    Color.call_block(expected_color) do |color|
+    Color.call_block_after_find(expected_color) do |color|
       color.should == expected_color
     end
   end
 
   it 'calls the code block with nil if color not found' do
     not_found_color = Color.new({id: -1})
-    Color.call_block(not_found_color) do |color|
+    Color.call_block_after_find(not_found_color) do |color|
       color.should == nil
     end
   end
+end
+
+describe 'Adding tags' do
+  it 'calls the code block with a response if found' do
+    response_200 = BubbleWrap::HTTP::Response.new({status_code: '200'})
+    color = Color.new
+    color.call_block_after_add_tag(response_200) do |response|
+      response.should == response_200
+    end
+  end
+
+  it 'calls the code block with nil if color not found' do
+    non_200_response = BubbleWrap::HTTP::Response.new({status_code: '999'})
+    color = Color.new
+    color.call_block_after_add_tag(non_200_response) do |response|
+      response.should == nil
+    end
+  end
+
+  it 'calls the code block with response nil if response is not ok' do
+    expected_hex = 'ffffff'
+    color = Color.new( { hex: expected_hex } )
+    stub_request(:post, "http://www.colr.org/js/color/#{expected_hex}/addtag/").
+        with(payload: { tags: 'post_not_ok'}).
+        to_fail(code: NSURLErrorNotConnectedToInternet)
+
+    @response = ''
+    color.add_tag('post_not_ok') do |response|
+      @response = response
+      resume
+    end
+
+    wait_max 1.0 do
+      @response.should == nil
+    end
+  end
+
+  it 'calls the code block with response if response is ok' do
+    expected_hex = '000000'
+    color = Color.new( { hex: expected_hex } )
+    stub_request(:post, "http://www.colr.org/js/color/#{expected_hex}/addtag/").
+        with(payload: { tags: 'test'}).
+        to_return(json: [{}])
+
+    @bubblewrap_response = nil
+    color.add_tag('test') do |response|
+      @bubblewrap_response = response
+      resume
+    end
+
+    wait_max 1.0 do
+      @bubblewrap_response.ok?.should == true
+    end
+  end
+
 end
 

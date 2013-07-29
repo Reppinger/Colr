@@ -17,7 +17,7 @@ class Color
   def self.find(hex, &block)
     BubbleWrap::HTTP.get("http://www.colr.org/json/color/#{hex}") do |response|
       color = create_color_from_response(response)
-      call_block(color, &block)
+      call_block_after_find(color, &block)
     end
   end
 
@@ -27,7 +27,7 @@ class Color
     Color.new(color_data)
   end
 
-  def self.call_block(color, &block)
+  def self.call_block_after_find(color, &block)
     if no_color_found?(color)
       block.call nil
     else
@@ -38,4 +38,19 @@ class Color
   def self.no_color_found?(color)
     color.id.to_i == -1
   end
+
+  def add_tag(tag, &block)
+    BubbleWrap::HTTP.post("http://www.colr.org/js/color/#{self.hex}/addtag/", payload:{tags: tag}) do |response|
+      call_block_after_add_tag(response, &block)
+    end
+  end
+
+  def call_block_after_add_tag(response, &block)
+    if response.ok?
+      block.call(response)
+    else
+      block.call nil
+    end
+  end
+
 end
