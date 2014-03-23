@@ -6,6 +6,7 @@ class ColorController < UIViewController
   def initWithColor(color)
     initWithNibName(nil, bundle: nil)
     self.color = color
+    self.edgesForExtendedLayout = UIRectEdgeNone
     self
   end
 

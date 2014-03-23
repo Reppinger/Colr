@@ -8,6 +8,6 @@ Feature: Add a tag to a color
 
 # Test works, but colr.org API has no delete so I am making a mess adding tags with each test run
   Scenario: Tag is added to color
-  Given I have found color ff00bb
-  #When I add a_tag
-  Then I see a_tag is added to the list of tags
+    Given I search for ff00bb
+    When I add a_tag
+    Then I see a_tag is added to the list of tags

@@ -1,4 +1,4 @@
-Given(/^I have found color ([^"]*)$/) do |hex_code|
-  step "I fill in \"#abcabc\" with \"#{hex_code}\""
-  step "I touch \"Search\""
+When(/^I search for ([^"]*)$/) do |hex_code|
+  frankly_map( "textField placeholder:'#abcabc'", "setText:", hex_code )
+  step 'I touch "Search"'
 end
